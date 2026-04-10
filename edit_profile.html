@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+        Edit Your Profile
+      </span>
+    </h1>
+  </div>
+
+  <!-- Form Card -->
+  <div class="bg-white rounded-xl shadow-lg p-8 transform hover:shadow-xl transition-all duration-300 mb-16">
+    <form method="POST" class="space-y-6">
+      <!-- Personal Details -->
+      <div class="grid grid-cols-1 gap-6 mb-8">
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Full Name</label>
+          <div class="relative">
+            <input type="text" name="name" required
+                   value="{{ user_data.name or '' }}"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                   placeholder="Enter your full name">
+            <i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Age (years)</label>
+          <div class="relative">
+            <input type="number" name="age" required
+                   value="{{ user_data.age or '' }}"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                   placeholder="Enter your age">
+            <i class="fas fa-birthday-cake absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Physical Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Height (cm)</label>
+          <div class="relative">
+            <input type="number" name="height" required
+                   value="{{ user_data.height or '' }}"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                   placeholder="Enter your height">
+            <i class="fas fa-ruler-vertical absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Weight (kg)</label>
+          <div class="relative">
+            <input type="number" name="weight" step="0.1" required
+                   value="{{ user_data.weight or '' }}"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                   placeholder="Enter your weight">
+            <i class="fas fa-weight absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity & Goals -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Activity Level</label>
+          <div class="relative">
+            <select name="work_type" required
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10 appearance-none">
+              {% for type in ['sedentary', 'light', 'moderate', 'very'] %}
+                <option value="{{ type }}"
+                        {% if user_data.work_type == type %}selected{% endif %}>
+                  {{ type|title }}
+                </option>
+              {% endfor %}
+            </select>
+            <i class="fas fa-running absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Fitness Goal</label>
+          <div class="relative">
+            <select name="goal" required
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10 appearance-none">
+              {% for goal in ['weight_loss', 'muscle_gain', 'maintenance', 'strength'] %}
+                <option value="{{ goal }}"
+                        {% if user_data.goal == goal %}selected{% endif %}>
+                  {{ goal|replace('_', ' ')|title }}
+                </option>
+              {% endfor %}
+            </select>
+            <i class="fas fa-bullseye absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Training Preferences -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Daily Calorie Target</label>
+          <div class="relative">
+            <input type="number" name="current_calories" required
+                   value="{{ user_data.current_calories or '' }}"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                   placeholder="Enter daily calories">
+            <i class="fas fa-fire absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        <div class="relative">
+          <label class="text-gray-700 font-medium mb-2 block">Workout Split</label>
+          <div class="relative">
+            <select name="workout_split" required
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10 appearance-none">
+              {% for split in ['full_body', 'upper_lower', 'push_pull_legs', 'body_part'] %}
+                <option value="{{ split }}"
+                        {% if user_data.workout_split == split %}selected{% endif %}>
+                  {{ split|replace('_', ' ')|title }}
+                </option>
+              {% endfor %}
+            </select>
+            <i class="fas fa-dumbbell absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="flex gap-4">
+        <button type="submit"
+                class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-semibold flex items-center justify-center space-x-2">
+          <i class="fas fa-save"></i>
+          <span>Save Changes</span>
+        </button>
+        <a href="{{ url_for('profile') }}"
+           class="flex-1 bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-semibold flex items-center justify-center space-x-2">
+          <i class="fas fa-times"></i>
+          <span>Cancel</span>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

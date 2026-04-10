@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8 bg-gray-50 min-h-screen">
+    <!-- Profile Header -->
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                Your Profile
+            </span>
+        </h1>
+        <a href="{{ url_for('edit_profile') }}"
+            class="inline-flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 transition-colors font-medium">
+            <i class="fas fa-edit"></i>
+            <span>Edit Profile</span>
+        </a>
+    </div>
+
+    <!-- User Details Card -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 transform hover:shadow-xl transition-all duration-300">
+        {% if user_data %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <!-- Name -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-user text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Name</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ user_data.name }}</p>
+                        </div>
+                    </div>
+                    <!-- Age -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-birthday-cake text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Age</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ user_data.age }} years</p>
+                        </div>
+                    </div>
+                    <!-- Height -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-ruler-vertical text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Height</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ user_data.height }} cm</p>
+                        </div>
+                    </div>
+                    <!-- Weight -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-weight text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Weight</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ user_data.weight }} kg</p>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Fitness Goal -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-bullseye text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Fitness Goal</p>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ user_data.goal|replace('_', ' ')|title }}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Daily Calories -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-fire text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Daily Calories Target</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ user_data.current_calories }}</p>
+                        </div>
+                    </div>
+                    <!-- Workout Split -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-dumbbell text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Workout Split</p>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ user_data.workout_split|replace('_', ' ')|title }}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Activity Level -->
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-running text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Activity Level</p>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ user_data.work_type|title }}
+                            </p>
+                        </div>
+                    </div>
+                </div>       
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-center gap-4 mt-6">
+                <a href="{{ url_for('meal_suggester') }}"
+                    class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-green-700 to-green-600 rounded-xl shadow-lg hover:from-green-600 hover:to-green-700 
+                           transition-all duration-300 transform hover:-translate-y-0.5">
+                    <i class="fas fa-utensils mr-2"></i>
+                    Meal Suggester
+                </a>
+                <a href="{{ url_for('view_plan') }}"
+                    class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 
+                           transition-all duration-300 transform hover:-translate-y-0.5">
+                    <i class="fas fa-dumbbell mr-2"></i>
+                    View Workout Plan
+                </a>
+            </div>
+        {% else %}
+            <!-- No Profile Data -->
+            <div class="text-center py-8">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-plus text-2xl text-indigo-600"></i>
+                </div>
+                <p class="text-gray-600 mb-4">No profile data available. Please complete your profile.</p>
+                <a href="{{ url_for('edit_profile') }}"
+                    class="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 
+                           transition-all duration-300">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Complete Profile</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Progress -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-16">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Recent Progress</h2>
+            <a href="{{ url_for('progress') }}"
+                class="inline-flex items-center space-x-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 
+                       transform hover:-translate-y-0.5 transition-all duration-300">
+                <i class="fas fa-plus"></i>
+                <span>Log Progress</span>
+            </a>
+        </div>
+
+        {% if progress %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Weight</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Calories</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Workout</th>
+                            <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for entry in progress %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ entry.date }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ entry.weight }} kg
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ entry.calories_eaten }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                    {{ entry.workout_completed }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <form action="{{ url_for('delete_progress', entry_id=entry.id) }}" method="post">
+                                        <button type="button" onclick="openDeleteModal(event, this.form)"
+                                            class="text-red-500 hover:text-red-700">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-8">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clipboard text-2xl text-gray-400"></i>
+                </div>
+                <p class="text-gray-600 mb-4">No progress entries yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-8 rounded-xl shadow-lg">
+        <p class="mb-4 text-gray-800">Are you sure you want to delete this entry?</p>
+        <div class="flex justify-end space-x-2">
+            <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                Cancel
+            </button>
+            <button id="confirmDeleteButton" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentForm = null;
+    function openDeleteModal(event, form) {
+        event.preventDefault();
+        currentForm = form;
+        document.getElementById("deleteConfirmationModal").classList.remove("hidden");
+    }
+    function closeDeleteModal() {
+        currentForm = null;
+        document.getElementById("deleteConfirmationModal").classList.add("hidden");
+    }
+    document.getElementById("confirmDeleteButton").addEventListener("click", function () {
+        if (currentForm) {
+            currentForm.submit();
+        }
+    });
+</script>
+{% endblock %}

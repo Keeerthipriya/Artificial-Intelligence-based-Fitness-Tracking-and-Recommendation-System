@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl md:text-6xl font-extrabold mb-6">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                Welcome to FitTracker
+            </span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Your personalized AI-powered fitness journey starts here
+        </p>
+    </div>
+    
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <!-- Track Progress Card -->
+        <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition-all duration-300">
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-2xl text-indigo-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Track Progress</h2>
+            </div>
+            <p class="text-gray-600 mb-6 text-lg">
+                Log your daily workouts, nutrition, and measurements to stay on top of your fitness journey.
+            </p>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('progress') }}" 
+                   class="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fas fa-play"></i>
+                    <span>Start Tracking</span>
+                </a>
+            {% else %}
+                <a href="{{ url_for('login') }}" 
+                   class="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Get Started</span>
+                </a>
+            {% endif %}
+        </div>
+        
+        <!-- AI Plans Card -->
+        <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition-all duration-300">
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
+                    <i class="fas fa-brain text-2xl text-purple-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">AI-Powered Plans</h2>
+            </div>
+            <p class="text-gray-600 mb-6 text-lg">
+                Get personalized workout and nutrition plans based on your goals and preferences.
+            </p>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('profile') }}" 
+                   class="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fas fa-magic"></i>
+                    <span>Create Plan</span>
+                </a>
+            {% else %}
+                <a href="{{ url_for('login') }}" 
+                   class="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Get Started</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div class="bg-white rounded-xl shadow-md p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-bullseye text-xl text-green-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Smart Goals</h3>
+            <p class="text-gray-600">Set and track meaningful fitness goals tailored to you</p>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-chart-bar text-xl text-blue-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Detailed Analytics</h3>
+            <p class="text-gray-600">Visualize your progress with comprehensive analytics</p>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6 text-center">
+            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-robot text-xl text-purple-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">AI Assistance</h3>
+            <p class="text-gray-600">Get intelligent recommendations for better results</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                Log Daily Progress
+            </span>
+        </h1>
+        <div class="text-sm text-gray-600">
+            {{ current_date.strftime('%B %d, %Y') }}
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-xl shadow-lg p-8 transform hover:shadow-xl transition-all duration-300 mb-16">
+        <form method="POST" class="space-y-8">
+            <!-- Weight Input -->
+            <div class="relative">
+                <label class="text-gray-700 font-medium mb-2 block">Today's Weight (kg)</label>
+                <div class="relative">
+                    <input type="number" 
+                           name="weight" 
+                           step="0.1" 
+                           required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                           placeholder="Enter your weight">
+                    <i class="fas fa-weight absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- Calories Input -->
+            <div class="relative">
+                <label class="text-gray-700 font-medium mb-2 block">Calories Eaten</label>
+                <div class="relative">
+                    <input type="number" 
+                           name="calories_eaten" 
+                           required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10"
+                           placeholder="Enter calories consumed">
+                    <i class="fas fa-fire absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- Workout Input -->
+            <div class="relative">
+                <label class="text-gray-700 font-medium mb-2 block">Workout Completed</label>
+                <div class="relative">
+                    <textarea name="workout_completed" 
+                              required 
+                              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 pl-10 h-32"
+                              placeholder="Describe your workout"></textarea>
+                    <i class="fas fa-dumbbell absolute left-3 top-6 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" 
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-semibold flex items-center justify-center space-x-2">
+                <i class="fas fa-save"></i>
+                <span>Save Progress</span>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
