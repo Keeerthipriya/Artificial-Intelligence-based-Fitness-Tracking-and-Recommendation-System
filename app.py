@@ -1,8 +1,11 @@
+# from urllib import response
+
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 import firebase_admin
 from firebase_admin import credentials, firestore
-from google.generativeai import GenerativeModel
-import google.generativeai as genai
+# from google.generativeai import GenerativeModel
+# import google.generativeai as genai
+from google import genai
 from datetime import datetime
 import pandas as pd
 import plotly.express as px
@@ -31,7 +34,22 @@ db = firestore.client()
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 if not GOOGLE_API_KEY:
     raise Exception("GOOGLE_API_KEY not found in environment variables")
-genai.configure(api_key=GOOGLE_API_KEY)
+# genai.configure(api_key=GOOGLE_API_KEY)
+client = genai.Client(api_key=GOOGLE_API_KEY)
+SAFE_DEFAULT_GENAI_MODEL = 'gemini-flash-lite-latest'
+USER_GENAI_MODEL = os.getenv('GENAI_MODEL')
+MODEL_FALLBACKS = [
+    SAFE_DEFAULT_GENAI_MODEL,
+    'gemini-flash-latest',
+    'gemini-pro-latest',
+    'gemini-2.5-flash',
+    'gemini-2.5-pro'
+]
+if USER_GENAI_MODEL:
+    MODEL_FALLBACKS.append(USER_GENAI_MODEL)
+MODEL_FALLBACKS = list(dict.fromkeys(MODEL_FALLBACKS))
+DEFAULT_GENAI_MODEL = USER_GENAI_MODEL or SAFE_DEFAULT_GENAI_MODEL
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -267,6 +285,42 @@ def download_plan():
     )
     
 
+def extract_generated_text(response):
+    if hasattr(response, 'text') and response.text:
+        return response.text
+    if hasattr(response, 'candidates') and response.candidates:
+        first = response.candidates[0]
+        content = getattr(first, 'content', None)
+        if content:
+            if hasattr(content, 'parts'):
+                return ''.join(getattr(part, 'text', '') for part in content.parts)
+            return getattr(content, 'text', '')
+    return ''
+
+
+def generate_content_with_fallback(prompt):
+    for model_name in MODEL_FALLBACKS:
+        try:
+            print(f"Trying model: {model_name}")
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt
+            )
+            generated_text = extract_generated_text(response)
+            if generated_text:
+                return generated_text
+            print(f"Warning: no text returned from model {model_name}")
+        except Exception as e:
+            error_text = str(e).lower()
+            print(f"Error generating content with {model_name}: {str(e)}")
+            if any(token in error_text for token in ['resource_exhausted', 'quota', '429', 'not_found', 'unsupported', 'invalid', 'bad request', '400']):
+                continue
+            print(f"Unhandled generation error with {model_name}, continuing to next model")
+            continue
+    print("All Gemini model attempts failed, returning None to use fallback plan")
+    return None
+
+
 def generate_workout_plan(user_details):
     try:
         prompt = f"""
@@ -287,9 +341,10 @@ def generate_workout_plan(user_details):
         6. Progress tracking tips
         """
 
-        model = GenerativeModel('gemini-1.5-pro')
-        response = model.generate_content(prompt)
-        return response.text
+        # model = GenerativeModel('gemini-1.5-flash')
+        # response = model.generate_content(prompt)
+        generated_text = generate_content_with_fallback(prompt)
+        return generated_text or generate_fallback_plan(user_details)
 
     except Exception as e:
         print(f"Error generating workout plan: {str(e)}")
@@ -320,6 +375,26 @@ def generate_fallback_plan(user_details):
     
     Daily Calorie Target: {user_details.get('current_calories')}
     """
+
+def generate_fallback_meal_plan(user_details, diet_preference, allergies):
+    return f"""
+    BASIC MEAL PLAN (Fallback)
+    Diet Preference: {diet_preference}
+    Allergies / Additional Info: {allergies}
+    Daily Calorie Target: {user_details.get('current_calories')}
+
+    Breakfast:
+    - Oatmeal with fruits and nuts
+
+    Lunch:
+    - Grilled chicken or tofu with mixed vegetables and brown rice
+
+    Dinner:
+    - Baked fish or lentils with steamed greens
+
+    Snacks:
+    - Greek yogurt, fruit, or a handful of nuts
+    """
 # Update the generate_meal_plan function to accept diet_preference and allergies
 def generate_meal_plan(user_details, diet_preference, allergies):
     try:
@@ -338,13 +413,30 @@ def generate_meal_plan(user_details, diet_preference, allergies):
         2. Specific foods with portion sizes and nutritional info
         3. Timing and preparation tips
         4. Healthy substitutions and variety
+
+          Format STRICTLY like this:
+
+        Breakfast:
+        - Item with portion
+
+        Lunch:
+        - Item with portion
+
+        Dinner:
+        - Item with portion
+
+        Snacks:
+        - Item with portion
+
+        Keep it simple. Avoid long paragraphs.
         """
-        model = GenerativeModel('gemini-1.5-pro')
-        response = model.generate_content(prompt)
-        return response.text
+        # model = GenerativeModel('gemini-1.5-flash')
+        # response = model.generate_content(prompt)
+        generated_text = generate_content_with_fallback(prompt)
+        return generated_text or generate_fallback_meal_plan(user_details, diet_preference, allergies)
     except Exception as e:
         print(f"Error generating meal plan: {str(e)}")
-        return "Could not generate a meal plan at this time. Please try again later."
+        return generate_fallback_meal_plan(user_details, diet_preference, allergies)
 
 # Update the meal_suggester route to send these new details
 @app.route('/meal_suggester', methods=['GET', 'POST'])
